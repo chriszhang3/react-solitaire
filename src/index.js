@@ -6,17 +6,12 @@ import './index.css';
 
 const two_clubs = <img src="images/2C.png"  alt="two clubs" height = "106" width = "69"></img>;
 
-class Square extends React.Component {
-  render() {
-    return (
-      <button
-        className="square"
-        onClick={() => this.props.onClick()}
-      >
-        {this.props.value}
-      </button>
-    );
-  }
+function Square(props) {
+  return (
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
 }
 
 class Board extends React.Component {
@@ -63,7 +58,20 @@ class Board extends React.Component {
   }
 }
 
+class Hand  extends React.Component {
+  render() {
+    return (
+      <div>
+        {"Your hand"}
+      </div>
+    )
+  }
+}
+
 class Game extends React.Component {
+
+
+
   render() {
     return (
       <div className="game">
@@ -71,6 +79,11 @@ class Game extends React.Component {
         <div className="game-board">
           <Board />
         </div>
+
+        <div className="your-hand">
+          <Hand />
+        </div>
+
         <div className="game-info">
           <div>{/* status */}</div>
           <ol>{/* TODO */}</ol>
