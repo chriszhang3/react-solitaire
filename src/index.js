@@ -7,25 +7,14 @@ import './index.css';
 const two_clubs = <img src="images/2C.png"  alt="two clubs" height = "106" width = "69"></img>;
 
 class Square extends React.Component {
-
-  constructor(props){
-    super(props);
-    this.state = {card: {props.value}};
-  }
-
-  switch = () => {
-    if (this.state.card == null){
-      this.setState({card: two_clubs});
-    } else {
-      this.setState({card: null});
-    }
-  }
-
   render() {
     return (
-      <div className="square" onClick = {this.switch}>
-        {this.state.card}
-      </div>
+      <button
+        className="square"
+        onClick={() => this.props.onClick()}
+      >
+        {this.props.value}
+      </button>
     );
   }
 }
@@ -33,21 +22,30 @@ class Square extends React.Component {
 class Board extends React.Component {
   constructor(props){
     super(props);
-    this.state = {button: "Click me"};
+    const cards = Array(3).fill(null);
+    cards[0] = two_clubs;
+    this.state = {
+      cards: cards,
+    };
   }
 
-  renderSquare(show) {
-    if (show == true) {
-      return <Square />;
+  handleClick(i){
+    const cards = this.state.cards.slice();
+    if(this.state.cards[i] == null){
+      cards[i] = two_clubs;
     } else {
-      return <Square />;
+      cards[i] = null;
     }
-
+    this.setState({cards: cards});
   }
 
-  hi = () => {
-    const button = "Clicked";
-    this.setState({button: button});
+  renderSquare(i) {
+      return (
+        <Square
+          value = {this.state.cards[i]}
+          onClick = {() => this.handleClick(i)}
+        />
+      );
   }
 
   render() {
@@ -55,11 +53,8 @@ class Board extends React.Component {
 
     return (
       <div>
-        <button onClick = {this.hi}>
-          {this.state.button}
-        </button>
         <div className="board-row">
-          {this.renderSquare(true)}
+          {this.renderSquare(0)}
           {this.renderSquare(1)}
           {this.renderSquare(2)}
         </div>
