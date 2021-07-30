@@ -14,24 +14,26 @@ function Square(props) {
   );
 }
 
-class Board extends React.Component {
+class Hand  extends React.Component {
+  render() {
+    return (
+      <div>
+        {this.props.value}
+      </div>
+    )
+  }
+}
+
+class Game extends React.Component {
   constructor(props){
     super(props);
     const cards = Array(3).fill(null);
     cards[0] = two_clubs;
+    cards[1] = two_clubs;
     this.state = {
       cards: cards,
+      hand: null
     };
-  }
-
-  handleClick(i){
-    const cards = this.state.cards.slice();
-    if(this.state.cards[i] == null){
-      cards[i] = two_clubs;
-    } else {
-      cards[i] = null;
-    }
-    this.setState({cards: cards});
   }
 
   renderSquare(i) {
@@ -43,45 +45,38 @@ class Board extends React.Component {
       );
   }
 
-  render() {
-    const status = 'Next player: X';
-
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-      </div>
-    );
+  handleClick(i){
+    const cards = this.state.cards.slice();
+    var hand = this.state.hand;
+    if(this.state.cards[i] == null && this.state.hand == null){
+    } else if (this.state.cards[i] != null && this.state.hand == null) {
+      hand = cards[i]
+      cards[i] = null;
+    } else if (this.state.cards[i] == null && this.state.hand != null) {
+      cards[i] = hand;
+      hand = null;
+    } else {}
+    this.setState({cards: cards, hand: hand});
   }
-}
 
-class Hand  extends React.Component {
-  render() {
-    return (
-      <div>
-        {"Your hand"}
-      </div>
-    )
+  test(){
+    const cards = this.state.cards;
+    const hand = "Hi"
+    this.setState({cards: cards, hand: hand});
   }
-}
-
-class Game extends React.Component {
-
-
 
   render() {
     return (
       <div className="game">
 
         <div className="game-board">
-          <Board />
+          {this.renderSquare(0)}
+          {this.renderSquare(1)}
+          {this.renderSquare(2)}
         </div>
 
         <div className="your-hand">
-          <Hand />
+          <Hand value = {this.state.hand} hi = {() => this.test()} />
         </div>
 
         <div className="game-info">
