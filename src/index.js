@@ -8,7 +8,10 @@ const two_clubs = <img src="images/2C.png"  alt="two clubs" height = "106" width
 
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button
+      className={props.border}
+      onClick={props.onClick}
+    >
       {props.value}
     </button>
   );
@@ -28,11 +31,13 @@ class Game extends React.Component {
   constructor(props){
     super(props);
     const cards = Array(3).fill(null);
+    const borders = Array(3).fill("blackSquare");
     cards[0] = two_clubs;
     cards[1] = two_clubs;
     this.state = {
       cards: cards,
-      hand: null
+      hand: null,
+      borders: borders
     };
   }
 
@@ -41,28 +46,27 @@ class Game extends React.Component {
         <Square
           value = {this.state.cards[i]}
           onClick = {() => this.handleClick(i)}
+          border = {this.state.borders[i]}
         />
       );
   }
 
   handleClick(i){
+
+    const borders = this.state.borders.slice();
     const cards = this.state.cards.slice();
     var hand = this.state.hand;
-    if(this.state.cards[i] == null && this.state.hand == null){
-    } else if (this.state.cards[i] != null && this.state.hand == null) {
-      hand = cards[i]
-      cards[i] = null;
-    } else if (this.state.cards[i] == null && this.state.hand != null) {
-      cards[i] = hand;
+    if (hand === null) {
+      hand = [this.state.cards[i], i];
+      borders[i] = "redSquare";
+    } else {
+      var [hand_card, place] = hand;
+      cards[place] = null;
+      cards[i] = hand_card;
       hand = null;
-    } else {}
-    this.setState({cards: cards, hand: hand});
-  }
-
-  test(){
-    const cards = this.state.cards;
-    const hand = "Hi"
-    this.setState({cards: cards, hand: hand});
+      borders.fill("blackSquare");
+    }
+    this.setState({cards: cards, hand: hand, borders: borders});
   }
 
   render() {
