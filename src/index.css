@@ -2,7 +2,7 @@
 .blackSquare {
   /* background: #fff; */
   /* float: left; */
-  border: 1px solid #999;
+  border: 1px solid gray;
   font-size: 24px;
   font-weight: bold;
 
@@ -41,7 +41,7 @@
 }
 
 .empty{
-  border: 1px solid #999;
+  border: 1px solid lightgray;
   height: 104px;
   width: 67px;
 }

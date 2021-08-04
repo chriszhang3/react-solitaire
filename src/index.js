@@ -1,42 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import {Deck, full_deck} from './utils.mjs';
 
 // ========================================
 
-const two_clubs = <img
-                    src="images/2C.png"
-                    alt="two clubs"
-                    height = "106"
-                    width = "69"
-                    className="card"
-                  ></img>;
-
-const two_d = <img
-                    src="images/2D.png"
-                    alt="two d"
-                    height = "106"
-                    width = "69"
-                    className="card"
-                  ></img>;
+const card_images = {};
+for (let i=0;i<52;i++){
+  const card = full_deck[i];
+  card_images[card] = <img
+                  src={`images/${card}.png`}
+                  alt={`${card}`}
+                  height = "106"
+                  width = "69"
+                  className="card"
+                ></img>;
+}
+const deck = new Deck();
 
 const empty = <div className="empty"></div>;
 
 const number_piles = 3;
 
-// function River(props) {
-//   return (
-//   )
-// }
-
 class Game extends React.Component {
   constructor(props){
     super(props);
-    const cards = Array(number_piles).fill(empty);
-    cards[0] = [two_d, two_clubs];
-    cards[1] = [two_clubs];
+    const river = Array(number_piles).fill(empty);
+    river[0] = [card_images[deck.draw()], card_images[deck.draw()]];
+    river[1] = [card_images[deck.draw()]];
     this.state = {
-      cards: cards,
+      river: river,
     };
   }
 
@@ -62,7 +55,7 @@ class Game extends React.Component {
     for(let i=0; i<number_piles; i++){
       piles_array.push(
         <div className="pile">
-          {this.state.cards[i]}
+          {this.state.river[i]}
         </div>
       );
     }
