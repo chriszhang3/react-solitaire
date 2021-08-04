@@ -20,28 +20,23 @@ const two_d = <img
                     className="card"
                   ></img>;
 
-const empty = <div className="empty"></div>
+const empty = <div className="empty"></div>;
 
-class Hand  extends React.Component {
-  render() {
-    return (
-      <div>
-        {this.props.value}
-      </div>
-    )
-  }
-}
+const number_piles = 3;
+
+// function River(props) {
+//   return (
+//   )
+// }
 
 class Game extends React.Component {
   constructor(props){
     super(props);
-    const cards = Array(3).fill(empty);
-    const borders = Array(3).fill("blackSquare");
-    cards[0] = [two_d];
-    cards[1] = two_clubs;
+    const cards = Array(number_piles).fill(empty);
+    cards[0] = [two_d, two_clubs];
+    cards[1] = [two_clubs];
     this.state = {
       cards: cards,
-      borders: borders
     };
   }
 
@@ -63,18 +58,22 @@ class Game extends React.Component {
   }
 
   render() {
+    const piles_array = [];
+    for(let i=0; i<number_piles; i++){
+      piles_array.push(
+        <div className="pile">
+          {this.state.cards[i]}
+        </div>
+      );
+    }
     return (
       <div className="game">
-        <div className="game-board">
-          <div className="pile">
-            {this.state.cards[0][0]}
-          </div>
-          <div className="pile">
-            {two_clubs}
-          </div>
-          <div className="pile">
-            {empty}
-          </div>
+        <div className="river">
+          {piles_array}
+        </div>
+
+        <div className="nertz">
+          {empty}
         </div>
 
         <div className="game-info">

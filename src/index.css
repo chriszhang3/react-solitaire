@@ -1,6 +1,3 @@
-.game-board {
-  padding: 15px;
-}
 
 .blackSquare {
   /* background: #fff; */
@@ -34,10 +31,19 @@
   width: 73px;
 }
 
+.river {
+  display: inline-block;
+}
+
+.nertz {
+  display: inline-block;
+  padding: 15px 90px 15px;
+}
+
 .empty{
   border: 1px solid #999;
-  height: 106px;
-  width: 69px;
+  height: 104px;
+  width: 67px;
 }
 
 .your-hand {
