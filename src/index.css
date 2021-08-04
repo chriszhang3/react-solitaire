@@ -2,10 +2,6 @@
   padding: 15px;
 }
 
-.your-hand {
-  padding: 15px;
-}
-
 .blackSquare {
   /* background: #fff; */
   /* float: left; */
@@ -36,4 +32,27 @@
   text-align: center;
   height: 110px;
   width: 73px;
+}
+
+.empty{
+  border: 1px solid #999;
+  height: 106px;
+  width: 69px;
+}
+
+.your-hand {
+  padding: 15px;
+}
+
+.pile {
+  display: inline-block;
+  padding: 15px;
+}
+.pile img.card:first-child{
+  display: block;
+  margin-top: 0px;
+}
+.pile img.card{
+  display: block;
+  margin-top: -80px;
 }
