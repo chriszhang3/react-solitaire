@@ -5,17 +5,6 @@ import {Deck, full_deck} from './utils.mjs';
 
 // ========================================
 
-// function dragStart = (event) => {
-//     event.dataTransfer.setData("text", event.target.id)
-//   }
-//
-// function drop = (event) => {
-//       if (event.target.id) {
-//         this.props.swap(event.dataTransfer.getData("text"), event.target.id)
-//         event.dataTransfer.clearData()
-//       }
-//     }
-
 function Pile(props) {
   return (
     <div className="pile" onClick={props.onClick}>
@@ -53,7 +42,7 @@ class Game extends React.Component {
                       width = "69"
                       className="card"
                       draggable="true"
-                      // onDragStart={dragStart}
+                      onDragStart={this.dragStart}
                     ></img>;
     }
 
@@ -70,9 +59,16 @@ class Game extends React.Component {
     };
   }
 
-  handleClick(){
-    if (this.state.clicked===null){
+  dragStart = (event) => {
+    console.log("start")
+    event.dataTransfer.setData("text", event.target.id);
+  }
 
+  drop = (event) => {
+    console.log("drop")
+    if (event.target.id) {
+      this.state.swap(event.dataTransfer.getData("text"), event.target.id);
+      event.dataTransfer.clearData();
     }
   }
 
@@ -100,22 +96,11 @@ class Game extends React.Component {
     return (
       <Pile
         value={this.make_cards(this.state.river[i])}
-        onClick={() => this.handleClick(i)}
       />
     )
   }
 
   render() {
-    const piles_array = [];
-    for(let i=0; i<this.number_piles; i++){
-      piles_array.push(
-        <div
-          className="pile"
-        >
-        {"Depricated"}
-        </div>
-      );
-    }
     return (
       <div className="game">
         <div className="river">
