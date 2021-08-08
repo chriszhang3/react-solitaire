@@ -41,9 +41,11 @@
 }
 
 .empty{
+  display: inline-block;
   border: 1px solid lightgray;
   height: 104px;
   width: 67px;
+  margin: 15px;
 }
 
 .your-hand {
@@ -53,6 +55,7 @@
 .pile {
   display: inline-block;
   padding: 15px;
+  vertical-align:top;
 }
 .pile div.card:first-child{
   display: block;

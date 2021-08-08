@@ -5,6 +5,31 @@ import {Deck, suits, ranks} from './utils.mjs';
 
 // ========================================
 
+const back = 
+  <div className="card">
+    <img
+      src={`images/gray_back.png`}
+      alt={`back of card`}
+      height = "106"
+      width = "69"
+    ></img>
+  </div>
+
+const card_images = {};
+for (let s=0;s<4;s++){
+  for (let r=0;r<13;r++){
+    let card = ranks[r]+suits[s]; 
+    card_images[card] = <img
+                  id={`${card}`}
+                  src={`images/${card}.png`}
+                  alt={`${card}`}
+                  height = "106"
+                  width = "69"
+                  className="card"
+                ></img>;
+  }
+}
+
 function Empty(props) {
   return (
     <div className="empty" onDrop={props.drop} onDragOver={(event) => event.preventDefault()}>
@@ -20,55 +45,22 @@ function Pile(props) {
   );
 }
 
-class Card extends React.Component {
-  render(){
-    return (
-      <div draggable={true} onDragStart={this.props.onDragStart}>
-        {this.props.value}
-      </div>
-    );
-  }
+function Card(props) {
+  return (
+    <div className="card" draggable={true} onDragStart={props.onDragStart} onDrop={props.drop} onDragOver={(event) => event.preventDefault()}>
+      {props.value}
+    </div>
+  );
 }
 
 class Game extends React.Component {
   constructor(props){
     super(props);
 
-    this.back = <img
-                    src={`images/gray_back.png`}
-                    alt={`back of card`}
-                    height = "106"
-                    width = "69"
-                    className="card"
-                  ></img>;
-
-    this.card_images = {};
-    this.refs = new Array(4);
-    for (let s=0;s<4;s++){
-      this.refs[s] = new Array(13);
-      for (let r=0;r<13;r++){
-        this.refs[s][r] = React.createRef();
-        let card = ranks[r]+suits[s]; 
-        this.card_images[card] = <img
-                      id={`${card}`}
-                      ref={this.refs[s][r]}
-                      src={`images/${card}.png`}
-                      alt={`${card}`}
-                      height = "106"
-                      width = "69"
-                      className="card"
-                    ></img>;
-      }
-    }
-
     this.deck = new Deck();
     this.number_piles = 4;
 
     const river = Array(this.number_piles).fill(null);
-    river[0] = this.deck.draw_n(3);
-    river[1] = this.deck.draw_n(2);
-    river[2] = this.deck.draw_n(1);
-    river[3] = [];
 
     this.state = {
       river: river,
@@ -83,9 +75,9 @@ class Game extends React.Component {
 
   drop(i,event){
     console.log("drop")
-    console.log(event)
     const start = event.dataTransfer.getData("text");
     console.log(start);
+    console.log(i);
     event.dataTransfer.clearData();
     const river = this.state.river.slice();
     const card = river[start].pop();
@@ -99,19 +91,13 @@ class Game extends React.Component {
     }
     const images = [];
     for(let i=0; i<data.length;i++){
-      if (i===data.length-1){
         images.push(
           <Card 
-            value={this.card_images[data[i]]}
+            value={card_images[data[i]]}
             onDragStart={(e) => this.dragStart(location,e)}
+            drop={(e) => {this.drop(location,e)}}
           />
         );
-      } else {
-        images.push(
-          this.back
-        );
-      }
-
     }
     return images;
   }
