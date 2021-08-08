@@ -1,9 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {Deck, full_deck} from './utils.mjs';
+import {Deck, suits, ranks} from './utils.mjs';
 
 // ========================================
+
+function Empty(props) {
+  return (
+    <div className="empty" onDrop={this.drop} onDragOver={(event) => event.preventDefault()}>
+    </div>
+  );
+}
 
 function Pile(props) {
   return (
@@ -13,15 +20,19 @@ function Pile(props) {
   );
 }
 
+class Card extends React.Component {
+  render(){
+    return (
+      <div draggable={true} onDragStart={this.props.onDragStart}>
+        {this.props.value}
+      </div>
+    );
+  }
+}
+
 class Game extends React.Component {
   constructor(props){
     super(props);
-
-    this.empty = <div
-                    className="empty"
-                    onDrop={this.drop}
-                    onDragOver={(event) => event.preventDefault()}
-                  ></div>;
 
     this.back = <img
                     src={`images/gray_back.png`}
@@ -32,18 +43,22 @@ class Game extends React.Component {
                   ></img>;
 
     this.card_images = {};
-    for (let i=0;i<52;i++){
-      let card = full_deck[i];
-      this.card_images[card] = <img
+    this.refs = new Array(4);
+    for (let s=0;s<4;s++){
+      this.refs[s] = new Array(13);
+      for (let r=0;r<13;r++){
+        this.refs[s][r] = React.createRef();
+        let card = ranks[r]+suits[s]; 
+        this.card_images[card] = <img
                       id={`${card}`}
+                      ref={this.refs[s][r]}
                       src={`images/${card}.png`}
                       alt={`${card}`}
                       height = "106"
                       width = "69"
                       className="card"
-                      draggable="true"
-                      onDragStart={this.dragStart}
                     ></img>;
+      }
     }
 
     this.deck = new Deck();
@@ -59,15 +74,19 @@ class Game extends React.Component {
     };
   }
 
-  dragStart = (event) => {
+  dragStart(location,event){
     console.log("start")
-    event.dataTransfer.setData("text", event.target.id);
+    console.log(location)
+    event.dataTransfer.setData("text", location);
   }
 
   drop = (event) => {
     console.log("drop")
+    console.log(event.target.id);
     if (event.target.id) {
-      this.state.swap(event.dataTransfer.getData("text"), event.target.id);
+      console.log("drop2")
+      let data = event.dataTransfer.getData("text");
+      console.log(data);
       event.dataTransfer.clearData();
     }
   }
@@ -105,10 +124,16 @@ class Game extends React.Component {
       <div className="game">
         <div className="river">
           {this.renderPile(0)}
+          <Card 
+            value={this.card_images[this.deck.draw()]}
+            onDragStart={(e) => this.dragStart(1,e)}
+          />
         </div>
 
         <div className="nertz">
-          {this.empty}
+          <Empty
+              onDragStart={(e) => this.dragStart(0,e)}
+            />
         </div>
 
         <div className="game-info">

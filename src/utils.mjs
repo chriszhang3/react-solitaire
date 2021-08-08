@@ -1,9 +1,9 @@
-const suits = ["Clubs","Diamonds","Hearts","Spades"];
-const values = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"]
+export const suits = ["Clubs","Diamonds","Hearts","Spades"];
+export const ranks = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"]
 export const full_deck = [];
 for (let s=0;s<4;s++){
-  for (let v=0;v<13;v++){
-    full_deck.push(values[v]+suits[s]);
+  for (let r=0;r<13;r++){
+    full_deck.push(ranks[r]+suits[s]);
   }
 }
 
