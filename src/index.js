@@ -7,7 +7,7 @@ import {Deck, suits, ranks} from './utils.mjs';
 
 function Empty(props) {
   return (
-    <div className="empty" onDrop={this.drop} onDragOver={(event) => event.preventDefault()}>
+    <div className="empty" onDrop={props.drop} onDragOver={(event) => event.preventDefault()}>
     </div>
   );
 }
@@ -62,15 +62,16 @@ class Game extends React.Component {
     }
 
     this.deck = new Deck();
-    this.number_piles = 3;
+    this.number_piles = 4;
 
     const river = Array(this.number_piles).fill(null);
     river[0] = this.deck.draw_n(3);
     river[1] = this.deck.draw_n(2);
+    river[2] = this.deck.draw_n(1);
+    river[3] = [];
 
     this.state = {
       river: river,
-      clicked: null,
     };
   }
 
@@ -80,18 +81,19 @@ class Game extends React.Component {
     event.dataTransfer.setData("text", location);
   }
 
-  drop = (event) => {
+  drop(i,event){
     console.log("drop")
-    console.log(event.target.id);
-    if (event.target.id) {
-      console.log("drop2")
-      let data = event.dataTransfer.getData("text");
-      console.log(data);
-      event.dataTransfer.clearData();
-    }
+    console.log(event)
+    const start = event.dataTransfer.getData("text");
+    console.log(start);
+    event.dataTransfer.clearData();
+    const river = this.state.river.slice();
+    const card = river[start].pop();
+    river[i].push(card);
+    this.setState({river: river,})
   }
 
-  make_cards(data){
+  make_cards(location,data){
     if (data===null){
       return this.empty;
     }
@@ -99,7 +101,10 @@ class Game extends React.Component {
     for(let i=0; i<data.length;i++){
       if (i===data.length-1){
         images.push(
-          this.card_images[data[i]]
+          <Card 
+            value={this.card_images[data[i]]}
+            onDragStart={(e) => this.dragStart(location,e)}
+          />
         );
       } else {
         images.push(
@@ -112,11 +117,17 @@ class Game extends React.Component {
   }
 
   renderPile(i) {
-    return (
-      <Pile
-        value={this.make_cards(this.state.river[i])}
-      />
-    )
+    if (this.state.river[i].length===0){
+      return (
+        <Empty drop={(e) => {this.drop(i,e)}}/>
+      )
+    } else {
+      return (
+        <Pile
+          value={this.make_cards(i,this.state.river[i])}
+        />
+      )
+    }
   }
 
   render() {
@@ -124,16 +135,9 @@ class Game extends React.Component {
       <div className="game">
         <div className="river">
           {this.renderPile(0)}
-          <Card 
-            value={this.card_images[this.deck.draw()]}
-            onDragStart={(e) => this.dragStart(1,e)}
-          />
-        </div>
-
-        <div className="nertz">
-          <Empty
-              onDragStart={(e) => this.dragStart(0,e)}
-            />
+          {this.renderPile(1)}
+          {this.renderPile(2)}
+          {this.renderPile(3)}
         </div>
 
         <div className="game-info">
