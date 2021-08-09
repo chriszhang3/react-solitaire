@@ -111,7 +111,9 @@ class Game extends React.Component {
     // Flip backs of cards
     if (start[0]==1){
           const index = river[start[2]].length;
-          river[start[2]][index-1][1] = true;
+          if (index >= 1){
+            river[start[2]][index-1][1] = true;
+          }
     }
     if (dropped_pile[0]===0){
       lake[dropped_pile[1]].push(card);
