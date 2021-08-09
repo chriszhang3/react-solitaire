@@ -5,6 +5,9 @@ import {Deck, suits, ranks} from './utils.mjs';
 
 // ========================================
 
+
+document.body.style = 'background-image: linear-gradient(to right,darkgreen,green)'
+
 const back = 
   <div className="card">
     <img
@@ -67,7 +70,7 @@ function Pile(props) {
 }
 function PileDeck(props) {
   return (
-    <div className="deck" onClick={props.onClick}>
+    <div className="piledeck" onClick={props.onClick}>
       {props.value}
     </div>
   );
@@ -429,6 +432,7 @@ class Game extends React.Component {
             {this.renderPile([0,3])}
           </div>
         </div>
+
 
         <div className="river">
           {this.renderPile([1,0])}
