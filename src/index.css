@@ -65,3 +65,16 @@
   display: block;
   margin-top: -80px;
 }
+.deck {
+  display: inline-block;
+  padding: 15px;
+  vertical-align:top;
+}
+.deck div.card:first-child{
+  display: block;
+  margin-top: 0px;
+}
+.deck div.card{
+  display: block;
+  margin-top: -110px;
+}
