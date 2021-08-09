@@ -160,8 +160,8 @@ class Game extends React.Component {
     console.log("clicked deck");
     console.log(deck);
     deck[deck.length-1][1]="false";
-    const lastcard = deck.pop();
-    deck.splice(0,0,lastcard);
+    const firstcard = deck.shift();
+    deck.splice(deck.length,0,firstcard);
     deck[deck.length-1][1]="true";
     console.log(deck);
     this.setState({river: river,lake: lake, deck: deck,})
