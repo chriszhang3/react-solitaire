@@ -101,9 +101,9 @@ class Game extends React.Component {
     const output = Array(card_list.length);
     for(let i=0; i<card_list.length; i++){
       if (i===card_list.length-1) {
-        output[i] = [card_list[i],"true"];
+        output[i] = [card_list[i],true];
       } else {
-        output[i] = [card_list[i],"false"];
+        output[i] = [card_list[i],false];
       }
       
     }
