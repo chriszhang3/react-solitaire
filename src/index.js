@@ -68,14 +68,22 @@ class Game extends React.Component {
     this.deck = new Deck();
     this.number_piles = 4;
 
-    const river = Array(this.number_piles).fill(null);
-    river[0] = this.turn_facedown(this.deck.draw_n(1));
+    const river=Array(this.number_piles).fill(null);
+    river[0] = [];
     river[1] = this.turn_facedown(this.deck.draw_n(2));
     river[2] = this.turn_facedown(this.deck.draw_n(3));
     river[3] = this.turn_facedown(this.deck.draw_n(4));
 
+    const lake=Array(this.number_piles).fill(null);
+    
+    lake[0] = [];
+    lake[1] = [];
+    lake[2] = [];
+    lake[3] = [];
+
     this.state = {
       river: river,
+      lake: lake,
     };
   }
 
@@ -92,16 +100,29 @@ class Game extends React.Component {
     console.log(dropped_pile);
     event.dataTransfer.clearData();
     const river = this.state.river.slice();
-    const card = river[start].pop();
+    const lake = this.state.lake.slice();
+    let card = "";
+    if (start[0]===0){
+      card = lake[start[2]].pop();
+    } else{
+      card = river[start[2]].pop();
+    }
 
     // Flip backs of cards
-    const index = river[start].length;
-    river[start][index-1][1] = true;
-
-    river[dropped_pile].push(card);
-    this.setState({river: river,})
+    if (start[0]==1){
+          const index = river[start[2]].length;
+          river[start[2]][index-1][1] = true;
+    }
+    if (dropped_pile[0]===0){
+      lake[dropped_pile[1]].push(card);
+    }
+    else{
+      river[dropped_pile[1]].push(card);
+    }
+    this.setState({river: river,lake: lake,})
   }
 
+  // Turns all but the first card face down. Turns the first card face up.
   turn_facedown(card_list){
     const output = Array(card_list.length);
     for(let i=0; i<card_list.length; i++){
@@ -116,6 +137,8 @@ class Game extends React.Component {
   }
 
   make_cards(location,data){
+    console.log("make_cards")
+    console.log(location);
     console.log(data);
     if (data===null){
       return this.empty;
@@ -136,33 +159,56 @@ class Game extends React.Component {
           <Back value={back}/>
         )
       }
-      
     }
     return images;
   }
 
+  // Creates a pile out this.state
   renderPile(i) {
-    if (this.state.river[i].length===0){
+    if (i[0] === 0){
+      if (this.state.lake[i[1]].length===0){
+        return (
+          <Empty drop={(e) => {this.drop(i,e)}}/>
+        )
+      } else{
+        return (
+          <Pile
+            value={this.make_cards(i,this.state.lake[i[1]])}
+          />
+        )
+      }
+  }
+  else{
+    if (this.state.river[i[1]].length===0){
       return (
         <Empty drop={(e) => {this.drop(i,e)}}/>
       )
-    } else {
+    } else{
       return (
         <Pile
-          value={this.make_cards(i,this.state.river[i])}
+          value={this.make_cards(i,this.state.river[i[1]])}
         />
       )
     }
+
   }
+}
 
   render() {
     return (
       <div className="game">
+        <div className="lake">
+          {this.renderPile([0,0])}
+          {this.renderPile([0,1])}
+          {this.renderPile([0,2])}
+          {this.renderPile([0,3])}
+        </div>
+
         <div className="river">
-          {this.renderPile(0)}
-          {this.renderPile(1)}
-          {this.renderPile(2)}
-          {this.renderPile(3)}
+          {this.renderPile([1,0])}
+          {this.renderPile([1,1])}
+          {this.renderPile([1,2])}
+          {this.renderPile([1,3])}
         </div>
 
         <div className="game-info">
