@@ -159,7 +159,7 @@ class Game extends React.Component {
       river: river,
       lake: lake,
       deck: deck,
-    };
+    }
   }
 
   // In the following three functions,
