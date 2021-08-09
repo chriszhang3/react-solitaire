@@ -144,27 +144,88 @@ class Game extends React.Component {
       river: river,
       lake: lake,
       deck: deck,
-    };
+    }
   }
 
   click(cardnumber,location,event){
     console.log("click")
     console.log(location)
     console.log(cardnumber)
-    if (!(location[0] === -1)){
-      return;
-    }
     const river = this.state.river.slice();
     const lake = this.state.lake.slice();
     const deck = this.state.deck.slice();
-    console.log("clicked deck");
-    console.log(deck);
-    deck[deck.length-1][1]="false";
-    const firstcard = deck.shift();
-    deck.splice(deck.length,0,firstcard);
-    deck[deck.length-1][1]="true";
-    console.log(deck);
-    this.setState({river: river,lake: lake, deck: deck,})
+    if (location[0] === -1){
+      console.log("clicked deck");
+      console.log(deck);
+      deck[deck.length-1][1]="false";
+      const firstcard = deck.shift();
+      deck.splice(deck.length,0,firstcard);
+      deck[deck.length-1][1]="true";
+      console.log(deck);
+      this.setState({river: river,lake: lake, deck: deck,})
+    } else if (location[0] === 1){
+      console.log("clicked card");
+      console.log(cardnumber);
+      console.log(location);
+      const card = river[location[1]][cardnumber][0];
+      const islast = (cardnumber == (river[location[1]].length-1));
+      console.log(card);
+      if (card.includes("Diamonds")){
+        console.log("Diamonds");
+        console.log(islast);
+        console.log(card);
+        console.log(ToNum(card[0]));
+        console.log(lake[0].length+1);
+
+        let movingcard = "";
+        if (islast && (ToNum(card[0]) == (lake[0].length +1))){
+          movingcard = river[location[1]].pop();
+          if (river[location[1]].length > 0){ river[location[1]][river[location[1]].length-1][1]="true";}
+          lake[0].push(movingcard);
+        } 
+      } else if (card.includes("Clubs")){
+        console.log("Clubs");
+        console.log(islast);
+        console.log(card);
+        console.log(ToNum(card[0]));
+        console.log(lake[1].length+1);
+
+        let movingcard = "";
+        if (islast && (ToNum(card[0]) == (lake[1].length +1))){
+          movingcard = river[location[1]].pop();
+          if (river[location[1]].length > 0){ river[location[1]][river[location[1]].length-1][1]="true";}
+          lake[1].push(movingcard);
+        } 
+      } else if (card.includes("Hearts")){
+        console.log("Hearts");
+        console.log(islast);
+        console.log(card);
+        console.log(ToNum(card[0]));
+        console.log(lake[2].length+1);
+
+        let movingcard = "";
+        if (islast && (ToNum(card[0]) == (lake[2].length +1))){
+          movingcard = river[location[1]].pop();
+          if (river[location[1]].length > 0){ river[location[1]][river[location[1]].length-1][1]="true";}
+          lake[2].push(movingcard);
+        } 
+      } else if (card.includes("Spades")){
+        console.log("Spades");
+        console.log(islast);
+        console.log(card);
+        console.log(ToNum(card[0]));
+        console.log(lake[3].length+1);
+
+        let movingcard = "";
+        if (islast && (ToNum(card[0]) == (lake[3].length +1))){
+          movingcard = river[location[1]].pop();
+          if (river[location[1]].length > 0){ river[location[1]][river[location[1]].length-1][1]="true";}
+          lake[3].push(movingcard);
+        } 
+      }
+
+      this.setState({river: river,lake: lake, deck: deck,})
+    }
   }
   dragStart(cardnumber,location,event){
     console.log("start")
@@ -194,12 +255,18 @@ class Game extends React.Component {
       return;
     }
     let card1="";
+    let islast="false";
     if (lakeriver==0){
       card1 = lake[pilenumber][cardnumber][0];
     } else if (lakeriver == 1){
       card1 = river[pilenumber][cardnumber][0];
+      islast = (cardnumber == (river[pilenumber].length-1));
+      console.log("islast");
+      console.log(islast);
+
     } else{
       card1 = deck[cardnumber][0];
+      islast = true;
     }
 
     let card2="";
@@ -209,6 +276,9 @@ class Game extends React.Component {
       }
       console.log(card1);
       console.log(ToNum(card1[0]));
+      if (!islast){
+        return;
+      }
       if (dropped_pile[1]===0){
         if (cardnumber2 === 0){
           if (!(card1 === "ADiamonds")){
