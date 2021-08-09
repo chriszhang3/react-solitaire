@@ -265,7 +265,8 @@ class Game extends React.Component {
 
         // Check
         if (lakeriver==="1"){
-          if ((river[pilenumber.length]-1) !== Number(cardnumber)) {
+          console.log(cardnumber);
+          if ((river[pilenumber].length-1) !== Number(cardnumber)) {
             return
           }
         }
@@ -288,17 +289,13 @@ class Game extends React.Component {
       }
     }
     
-    console.log("LOCATION 1")
-
-    let movingcards = "";
+    let movingcards = [];
     if (lakeriver==="0"){
       movingcards = lake[pilenumber].splice(cardnumber);
     } else if (lakeriver === "1"){
       movingcards = river[pilenumber].splice(cardnumber);
     } else {
-      console.log("deck", deck);
       movingcards = [deck[1].pop()];
-      console.log("movingcards:", movingcards);
     }
 
     // Flip backs of cards
