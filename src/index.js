@@ -207,13 +207,15 @@ class Game extends React.Component {
       if (cardnumber2 < lake[dropped_pile[1]].length){
         return;
       }
+      console.log(card1);
+      console.log(ToNum(card1[0]));
       if (dropped_pile[1]===0){
         if (cardnumber2 === 0){
           if (!(card1 === "ADiamonds")){
             return;
           }
         }else{
-          if (!(card1.includes("Diamonds") && ToNum(card1)===cardnumber2)){
+          if (!(card1.includes("Diamonds") && ToNum(card1[0])===cardnumber2+1)){
             return;
           }
         }
@@ -223,7 +225,7 @@ class Game extends React.Component {
             return;
           }
         } else{
-          if (!(card1.includes("Clubs") && ToNum(card1)===cardnumber2)){
+          if (!(card1.includes("Clubs") && ToNum(card1[0])===cardnumber2+1)){
             return;
           }
         }
@@ -233,7 +235,7 @@ class Game extends React.Component {
             return;
           }
         }else{
-          if (!(card1.includes("Hearts") && ToNum(card1)===cardnumber2)){
+          if (!(card1.includes("Hearts") && ToNum(card1[0])===cardnumber2+1)){
             return;
           }
         }
@@ -243,7 +245,7 @@ class Game extends React.Component {
             return;
           }
         }else{
-          if (!(card1.includes("Spades") && ToNum(card1)===cardnumber2)){
+          if (!(card1.includes("Spades") && ToNum(card1[0])===cardnumber2+1)){
             return;
           }
         }
