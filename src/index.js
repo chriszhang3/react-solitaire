@@ -32,14 +32,19 @@ for (let s=0;s<4;s++){
 
 function Empty(props) {
   return (
-    <div className="empty" onDrop={props.drop} onDragOver={(event) => event.preventDefault()}>
-    </div>
+    <div 
+      className="empty" 
+      onDrop={props.drop} 
+      onDragOver={(event) => 
+      event.preventDefault()}
+      onClick={props.onClick}
+    />
   );
 }
 
 function Back(props) {
   return (
-    <div className="card">
+    <div className="card" onClick={props.onClick}>
       {props.value}
     </div>
   );
@@ -47,7 +52,7 @@ function Back(props) {
 
 function Card(props) {
   return (
-    <div className="card" draggable={true} onClick={props.onClick} onDragStart={props.onDragStart} onDrop={props.drop} onDragOver={(event) => event.preventDefault()}>
+    <div className="card" draggable={true} onDragStart={props.onDragStart} onDrop={props.drop} onDragOver={(event) => event.preventDefault()}>
       {props.value}
     </div>
   );
@@ -98,6 +103,15 @@ function ToNum(value){
   }
 }
 
+function getSuit(card_string) {
+  console.log("card_string", card_string, typeof(card_string));
+  if (card_string[0] === "1"){
+    return card_string.slice(2);
+  } else {
+    return card_string.slice(1);
+  }
+}
+
 function ToColor(card){
   if (card.includes("Clubs")){
     return "black";
@@ -109,6 +123,7 @@ function ToColor(card){
     return "red";
   }
 }
+
 function AllowedToStack(card1,card2){
   console.log("comparing");
   console.log(card1);
@@ -121,25 +136,25 @@ class Game extends React.Component {
     super(props);
 
     this.deck = new Deck();
-    this.number_piles = 4;
 
-    const river=Array(this.number_piles).fill(null);
-    river[0] = this.turn_facedown(this.deck.draw_n(1));
-    river[1] = this.turn_facedown(this.deck.draw_n(2));
-    river[2] = this.turn_facedown(this.deck.draw_n(3));
-    river[3] = this.turn_facedown(this.deck.draw_n(4));
-    river[4] = this.turn_facedown(this.deck.draw_n(5));
-    river[5] = this.turn_facedown(this.deck.draw_n(6));
-    river[6] = this.turn_facedown(this.deck.draw_n(7));
+    const river=[];
+    river[0] = this.turn_facedown_makelist(this.deck.draw_n(1), true);
+    river[1] = this.turn_facedown_makelist(this.deck.draw_n(2), true);
+    river[2] = this.turn_facedown_makelist(this.deck.draw_n(3), true);
+    river[3] = this.turn_facedown_makelist(this.deck.draw_n(4), true);
+    river[4] = this.turn_facedown_makelist(this.deck.draw_n(5), true);
+    river[5] = this.turn_facedown_makelist(this.deck.draw_n(6), true);
+    river[6] = this.turn_facedown_makelist(this.deck.draw_n(7), true);
 
-    const lake=Array(this.number_piles).fill(null);
-    
+    const lake=[]
     lake[0] = [];
     lake[1] = [];
     lake[2] = [];
     lake[3] = [];
 
-    const deck=this.turn_facedown(this.deck.deck);
+    const facedown_deck = this.turn_facedown_makelist(this.deck.deck, false);
+    const deck=[facedown_deck,[]];
+
     this.state = {
       river: river,
       lake: lake,
@@ -147,111 +162,108 @@ class Game extends React.Component {
     };
   }
 
-  click(cardnumber,location,event){
-    console.log("click")
-    console.log(location)
-    console.log(cardnumber)
+  // In the following three functions,
+  // location is a tuple:
+  // location[0] === -1 means deck
+  // location[0] === 1 makes river
+  // location[0] === 0 means lake
+  // ---------------------------------
+
+  click(location,event){
     if (!(location[0] === -1)){
       return;
     }
-    const river = this.state.river.slice();
-    const lake = this.state.lake.slice();
     const deck = this.state.deck.slice();
-    console.log("clicked deck");
-    console.log(deck);
-    deck[deck.length-1][1]="false";
-    const firstcard = deck.shift();
-    deck.splice(deck.length,0,firstcard);
-    deck[deck.length-1][1]="true";
-    console.log(deck);
-    this.setState({river: river,lake: lake, deck: deck,})
+
+    if (deck[0].length===0) {
+      deck[0] = this.turn_facedown(deck[1].slice());
+      deck[1] = [];
+    } else {
+      console.log(deck);
+      const next_card = deck[0].shift();
+      next_card[1] = true;
+      deck[1].push(next_card);
+    }
+    this.setState({
+      river: this.state.river,
+      lake: this.state.lake,
+      deck: deck,
+    })
   }
+
+
+  // Cardnumber is the location of the card in the array
   dragStart(cardnumber,location,event){
-    console.log("start")
-    console.log(location)
-    console.log(cardnumber)
     event.dataTransfer.setData("lake-river", location[0]);
     event.dataTransfer.setData("pilenumber", location[1]);
     event.dataTransfer.setData("cardnumber", cardnumber);
   }
-
+ 
   drop(cardnumber2,dropped_pile,event){
-    console.log("drop")
-    console.log(cardnumber2)
+    console.log("DROP")
+    console.log("cardnumber2", cardnumber2)
     const river = this.state.river.slice();
     const lake = this.state.lake.slice();
     const deck = this.state.deck.slice();
+
+    // Information on the start of the drag
+    // lakeriver == 0 means card was from lake
+    // lakeriver == 1 means card was from river
     const lakeriver = event.dataTransfer.getData("lake-river");
     const pilenumber = event.dataTransfer.getData("pilenumber");
     const cardnumber = event.dataTransfer.getData("cardnumber");
-    console.log(lakeriver);
+
+    console.log("lakerive", lakeriver);
     console.log(pilenumber);
     console.log(cardnumber);
-    console.log(dropped_pile);
+    console.log("dropped_pile", dropped_pile);
     event.dataTransfer.clearData();
 
+    // Doesn't allow dropping cards on the deck.
     if (dropped_pile[0]===-1){
       return;
     }
+
     let card1="";
-    if (lakeriver==0){
+    if (lakeriver == 0){
       card1 = lake[pilenumber][cardnumber][0];
     } else if (lakeriver == 1){
       card1 = river[pilenumber][cardnumber][0];
+      console.log(card1);
     } else{
-      card1 = deck[cardnumber][0];
+      console.log("cardnumber");
+      console.log(cardnumber);
+      console.log(deck);
+      card1 = deck[1][cardnumber][0];
+      console.log(card1);
     }
 
     let card2="";
+
+    // If you are dropping into the lake.
     if (dropped_pile[0]===0){
       if (cardnumber2 < lake[dropped_pile[1]].length){
         return;
       }
-      console.log(card1);
-      console.log(ToNum(card1[0]));
-      if (dropped_pile[1]===0){
-        if (cardnumber2 === 0){
-          if (!(card1 === "ADiamonds")){
-            return;
-          }
-        }else{
-          if (!(card1.includes("Diamonds") && ToNum(card1[0])===cardnumber2+1)){
-            return;
-          }
-        }
-      }else if (dropped_pile[1]===1){
-        if (cardnumber2 === 0){
-          if (!(card1 === "AClubs")){
-            return;
-          }
-        } else{
-          if (!(card1.includes("Clubs") && ToNum(card1[0])===cardnumber2+1)){
-            return;
-          }
-        }
-      } else if (dropped_pile[1]===2){
-        if (cardnumber2 === 0){
-          if (!(card1 === "AHearts")){
-            return;
-          }
-        }else{
-          if (!(card1.includes("Hearts") && ToNum(card1[0])===cardnumber2+1)){
-            return;
-          }
-        }
-      }else  if (dropped_pile[1]===3){
-        if (cardnumber2 === 0){
-          if (!(card1 === "ASpades")){
-            return;
-          }
-        }else{
-          if (!(card1.includes("Spades") && ToNum(card1[0])===cardnumber2+1)){
-            return;
-          }
+
+      // If the lake pile is empty.
+      if (cardnumber2 === 0){
+        if (!(card1[0] === "A")){
+          return;
+        } 
+
+      }else{
+        const pile = lake[dropped_pile[1]];
+        card2 = pile[pile.length-1][0];
+        console.log("card1", card1);
+        console.log("card2", card2);
+        if ((!(ToNum(card1[0])===cardnumber2+1))||(getSuit(card1) !== getSuit(card2))){
+          return;
         }
       }
-    }
-    else{
+    
+    // If you are dropping into the river.
+    } else {
       if (cardnumber2 < river[dropped_pile[1]].length){
         return;
       }
@@ -267,13 +279,17 @@ class Game extends React.Component {
       }
     }
     
+    console.log("LOCATION 1")
+
     let movingcards = "";
-    if (lakeriver==0){
+    if (lakeriver==="0"){
       movingcards = lake[pilenumber].splice(cardnumber);
-    } else if (lakeriver == 1){
+    } else if (lakeriver === "1"){
       movingcards = river[pilenumber].splice(cardnumber);
-    } else{
-      movingcards = deck.splice(cardnumber);
+    } else {
+      console.log("deck", deck);
+      movingcards = [deck[1].pop()];
+      console.log("movingcards:", movingcards);
     }
 
     // Flip backs of cards
@@ -283,46 +299,50 @@ class Game extends React.Component {
             river[pilenumber][index-1][1] = true;
           }
     }
-   if (lakeriver==-1){
-          const index = deck.length;
-          console.log("pulled card from deck");
-          console.log(index);
-          console.log(deck);
-          if (index >= 1){
-            deck[index-1][1] = true;
-          }
-    }
+
     if (dropped_pile[0]===0){
       lake[dropped_pile[1]]=lake[dropped_pile[1]].concat(movingcards);
     }
     else{
       river[dropped_pile[1]]=river[dropped_pile[1]].concat(movingcards);
     }
-    this.setState({river: river,lake: lake, deck: deck,})
+
+    this.setState({
+      river: river,
+      lake: lake,
+      deck: deck,
+    })
   }
 
-  // Turns all but the first card face down. Turns the first card face up.
-  turn_facedown(card_list){
+  // Turns all cards face down and makes each card into a tuple.
+  // If leave_faceup is true, leaves top card faceup
+  turn_facedown_makelist(card_list, leave_faceup){
     const output = Array(card_list.length);
     for(let i=0; i<card_list.length; i++){
-      if (i===card_list.length-1) {
+      if (i===card_list.length-1 && leave_faceup) {
         output[i] = [card_list[i],true];
       } else {
         output[i] = [card_list[i],false];
       }
-      
     }
     return output;
   }
 
+  // Turns all cards facedown. Cards are already tuples.
+  turn_facedown(card_list){
+    for(let i=0; i<card_list.length; i++){
+      card_list[i][1] = false;
+    }
+    return card_list;
+  }
+
   make_cards(location,data){
-    console.log("make_cards")
-    console.log(location);
-    console.log(data);
     if (data===null){
       return this.empty;
     }
     const images = [];
+
+  
     for(let cardnumber=0; cardnumber<data.length;cardnumber++){
       const face_up = data[cardnumber][1];
       if (face_up) {
@@ -330,47 +350,49 @@ class Game extends React.Component {
           <Card 
             value={card_images[data[cardnumber][0]]}
             onDragStart={(e) => this.dragStart(cardnumber,location,e)}
-            onClick={(e) => this.click(cardnumber,location,e)}
             drop={(e) => {this.drop(cardnumber+1,location,e)}}
           />
         );
       } else {
         images.push(
-          <Back value={back}/>
+          <Back value={back} onClick={(e) => this.click(location,e)}/>
         )
       }
     }
     return images;
   }
     
-  // Creates a pile out this.state
+  // Creates game board out of this.state
   renderPile(location) {
     if (location[0] === -1){
-      if (this.state.deck.length===0){
+      if (this.state.deck[location[1]].length===0){
         return (
-          <Empty drop={(e) => {this.drop(0,location,e)}}/>
+          <Empty drop={(e) => {this.drop(0,location,e)}} onClick={(e) => this.click(location,e)}/>
         )
       } else{
         return (
           <PileDeck
-            value={this.make_cards(location,this.state.deck)}
+            value={this.make_cards(location,this.state.deck[location[1]])}
           />
         )
       }
   } else if (location[0] === 0){
-      if (this.state.lake[location[1]].length===0){
-        return (
-          <Empty drop={(e) => {this.drop(0,location,e)}}/>
-        )
-      } else{
-        return (
-          <PileDeck
-            value={this.make_cards(location,this.state.lake[location[1]])}
-          />
-        )
-      }
+    console.log("renderPile\n", "lake", this.state.lake);
+    console.log("location", location);
+    console.log(this.state.lake[location[1]]);
+    if (this.state.lake[location[1]].length===0){
+      return (
+        <Empty drop={(e) => {this.drop(0,location,e)}}/>
+      )
+    } else{
+      return (
+        <PileDeck
+          value={this.make_cards(location,this.state.lake[location[1]])}
+        />
+      )
+    }
   }
-  else{
+  else {
     if (this.state.river[location[1]].length===0){
       return (
         <Empty drop={(e) => {this.drop(0,location,e)}}/>
@@ -382,21 +404,24 @@ class Game extends React.Component {
         />
       )
     }
-
   }
 }
 
   render() {
     return (
       <div className="game">
-        <div className="deck">
-          {this.renderPile([-1,0])}
-        </div>
-        <div className="lake">
-          {this.renderPile([0,0])}
-          {this.renderPile([0,1])}
-          {this.renderPile([0,2])}
-          {this.renderPile([0,3])}
+
+        <div className="topRow">
+          <div className="deck">
+            {this.renderPile([-1,0])}
+            {this.renderPile([-1,1])}
+          </div>
+          <div className="lake">
+            {this.renderPile([0,0])}
+            {this.renderPile([0,1])}
+            {this.renderPile([0,2])}
+            {this.renderPile([0,3])}
+          </div>
         </div>
 
         <div className="river">
@@ -408,6 +433,8 @@ class Game extends React.Component {
           {this.renderPile([1,5])}
           {this.renderPile([1,6])}
         </div>
+        
+        
 
         <div className="game-info">
           <div>{/* status */}</div>
