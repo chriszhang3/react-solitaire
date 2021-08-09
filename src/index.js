@@ -8,27 +8,21 @@ import {Deck, suits, ranks} from './utils.mjs';
 document.body.style = 'background-image: linear-gradient(to right,darkgreen,green)';
 
 const back = 
-  <div className="card">
-    <img
-      src={`images/gray_back.png`}
-      alt={`back of card`}
-      height = "106"
-      width = "69"
-    ></img>
-  </div>
+  <img
+    className="card"
+    src={`images/gray_back.png`}
+    alt={`back of card`}
+  />
 
 const card_images = {};
 for (let s=0;s<4;s++){
   for (let r=0;r<13;r++){
     let card = ranks[r]+suits[s]; 
     card_images[card] = <img
-                  id={`${card}`}
                   src={`images/${card}.png`}
                   alt={`${card}`}
-                  height = "106"
-                  width = "69"
                   className="card"
-                ></img>;
+                />;
   }
 }
 
@@ -130,7 +124,7 @@ function AllowedToStack(card1,card2){
   console.log("comparing");
   console.log(card1);
   console.log(card2);
-  return ((toNum(card1[0])===toNum(card2[0])-1) && (ToColor(card1) != ToColor(card2)));
+  return ((toNum(card1[0])===toNum(card2[0])-1) && (ToColor(card1) !== ToColor(card2)));
 }
 
 class Game extends React.Component {
@@ -301,7 +295,7 @@ class Game extends React.Component {
     }
 
     // Flip backs of cards
-    if (lakeriver==1){
+    if (lakeriver==="1"){
           const index = river[pilenumber].length;
           if (index >= 1){
             river[pilenumber][index-1][1] = true;

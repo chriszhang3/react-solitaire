@@ -23,7 +23,7 @@
 }
 .piledeck div.card{
   display: block;
-  margin-top: -111px;
+  margin-top: -107px;
 }
 
 .pile {
@@ -53,4 +53,9 @@
   height: 104px;
   width: 67px;
   margin: 15px;
+}
+
+.card {
+  width: 69px;
+  height: 106px;
 }
