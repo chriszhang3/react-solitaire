@@ -73,7 +73,7 @@ function PileDeck(props) {
   );
 }
 
-function ToNum(value){
+function toNum(value){
   if (value === "2"){
     return 2;
   } else if (value === "3"){
@@ -128,7 +128,7 @@ function AllowedToStack(card1,card2){
   console.log("comparing");
   console.log(card1);
   console.log(card2);
-  return ((ToNum(card1[0])===ToNum(card2[0])-1) && (ToColor(card1) != ToColor(card2)));
+  return ((toNum(card1[0])===toNum(card2[0])-1) && (ToColor(card1) != ToColor(card2)));
 }
 
 class Game extends React.Component {
@@ -211,11 +211,13 @@ class Game extends React.Component {
     // lakeriver == 1 means card was from river
     const lakeriver = event.dataTransfer.getData("lake-river");
     const pilenumber = event.dataTransfer.getData("pilenumber");
+
+    // Which card in the pile. array.length-1 is the top card.
     const cardnumber = event.dataTransfer.getData("cardnumber");
 
     console.log("lakerive", lakeriver);
     console.log(pilenumber);
-    console.log(cardnumber);
+    console.log("cardnumber", cardnumber);
     console.log("dropped_pile", dropped_pile);
     event.dataTransfer.clearData();
 
@@ -225,9 +227,9 @@ class Game extends React.Component {
     }
 
     let card1="";
-    if (lakeriver == 0){
+    if (lakeriver === "0"){
       card1 = lake[pilenumber][cardnumber][0];
-    } else if (lakeriver == 1){
+    } else if (lakeriver === "1"){
       card1 = river[pilenumber][cardnumber][0];
       console.log(card1);
     } else{
@@ -246,19 +248,26 @@ class Game extends React.Component {
         return;
       }
 
-      // If the lake pile is empty.
+      // If the lake pile is empty. You can only put an ace on it.
       if (cardnumber2 === 0){
         if (!(card1[0] === "A")){
           return;
         } 
 
       }else{
+
+        // Check that the suit and rank is correct.
         const pile = lake[dropped_pile[1]];
         card2 = pile[pile.length-1][0];
-        console.log("card1", card1);
-        console.log("card2", card2);
-        if ((!(ToNum(card1[0])===cardnumber2+1))||(getSuit(card1) !== getSuit(card2))){
+        if ((!(toNum(card1[0])===cardnumber2+1))||(getSuit(card1) !== getSuit(card2))){
           return;
+        }
+
+        // Check
+        if (lakeriver==="1"){
+          if ((river[pilenumber.length]-1) !== Number(cardnumber)) {
+            return
+          }
         }
       }
     
