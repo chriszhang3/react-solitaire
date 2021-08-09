@@ -427,7 +427,6 @@ class Game extends React.Component {
           </div>
         </div>
 
-
         <div className="river">
           {this.renderPile([1,0])}
           {this.renderPile([1,1])}
@@ -437,8 +436,6 @@ class Game extends React.Component {
           {this.renderPile([1,5])}
           {this.renderPile([1,6])}
         </div>
-        
-        
 
         <div className="game-info">
           <div>{/* status */}</div>
