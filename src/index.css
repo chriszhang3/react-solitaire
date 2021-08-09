@@ -6,7 +6,6 @@
 .lake {
   display: inline-block;
   vertical-align:bottom;
-  margin-left: 100px;
 }
 
 .river {
@@ -27,15 +26,6 @@
   margin-top: -111px;
 }
 
-.empty{
-  display: inline-block;
-  border: 1px solid lightgray;
-  /* background-color: lightgreen; */
-  height: 104px;
-  width: 67px;
-  margin: 15px;
-}
-
 .pile {
   display: inline-block;
   padding: 15px;
@@ -50,3 +40,17 @@
   margin-top: -90px;
 }
 
+.empty{
+  display: inline-block;
+  border: 1px solid lightgray;
+  height: 104px;
+  width: 67px;
+  margin: 15px;
+}
+
+.blank{
+  display: inline-block;
+  height: 104px;
+  width: 67px;
+  margin: 15px;
+}

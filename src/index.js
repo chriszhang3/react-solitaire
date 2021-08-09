@@ -5,8 +5,7 @@ import {Deck, suits, ranks} from './utils.mjs';
 
 // ========================================
 
-
-document.body.style = 'background-image: linear-gradient(to right,darkgreen,green)'
+document.body.style = 'background-image: linear-gradient(to right,darkgreen,green)';
 
 const back = 
   <div className="card">
@@ -425,6 +424,7 @@ class Game extends React.Component {
             {this.renderPile([-1,0])}
             {this.renderPile([-1,1])}
           </div>
+          <div className="blank"/>
           <div className="lake">
             {this.renderPile([0,0])}
             {this.renderPile([0,1])}
