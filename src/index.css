@@ -1,11 +1,12 @@
 .deck {
   display: inline-block;
-  margin-top: 50px;
+  vertical-align: top;
 }
 
 .lake {
   display: inline-block;
-  vertical-align:bottom;
+  vertical-align: top;
+  margin-bottom: 50px;
 }
 
 .river {
@@ -13,9 +14,9 @@
 }
 
 .piledeck {
-  display: inline-block;
-  padding: 15px;
   vertical-align: top;
+  display: inline-block;
+  margin: 15px;
 }
 .piledeck div.card:first-child{
   display: block;
@@ -23,7 +24,7 @@
 }
 .piledeck div.card{
   display: block;
-  margin-top: -107px;
+  margin-top: -105px;
 }
 
 .pile {
@@ -53,6 +54,7 @@
   height: 104px;
   width: 67px;
   margin: 15px;
+  vertical-align: bottom;
 }
 
 .card {
