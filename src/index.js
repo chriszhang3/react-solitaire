@@ -85,15 +85,20 @@ class Game extends React.Component {
     event.dataTransfer.setData("text", location);
   }
 
-  drop(i,event){
+  drop(dropped_pile,event){
     console.log("drop")
     const start = event.dataTransfer.getData("text");
     console.log(start);
-    console.log(i);
+    console.log(dropped_pile);
     event.dataTransfer.clearData();
     const river = this.state.river.slice();
     const card = river[start].pop();
-    river[i].push(card);
+
+    // Flip backs of cards
+    const index = river[start].length;
+    river[start][index-1][1] = true;
+
+    river[dropped_pile].push(card);
     this.setState({river: river,})
   }
 
