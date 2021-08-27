@@ -1,3 +1,7 @@
+.game {
+  padding: 15px;
+}
+
 .deck {
   display: inline-block;
   vertical-align: top;
@@ -38,7 +42,7 @@
 }
 .pile div.card{
   display: block;
-  margin-top: -90px;
+  margin-top: -85px;
 }
 
 .empty{
@@ -60,4 +64,9 @@
 .card {
   width: 69px;
   height: 106px;
+}
+
+button {
+  position: absolute;
+  bottom: 30px;
 }

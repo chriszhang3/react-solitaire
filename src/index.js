@@ -131,16 +131,27 @@ class Game extends React.Component {
   constructor(props){
     super(props);
 
-    this.deck = new Deck();
+    const [river, lake, game_deck] = this.new_game();
+
+    this.state = {
+      river: river,
+      lake: lake,
+      deck: game_deck,
+    }
+  }
+
+  new_game(){
+
+    const deck = new Deck();
 
     const river=[];
-    river[0] = this.turn_facedown_makelist(this.deck.draw_n(1), true);
-    river[1] = this.turn_facedown_makelist(this.deck.draw_n(2), true);
-    river[2] = this.turn_facedown_makelist(this.deck.draw_n(3), true);
-    river[3] = this.turn_facedown_makelist(this.deck.draw_n(4), true);
-    river[4] = this.turn_facedown_makelist(this.deck.draw_n(5), true);
-    river[5] = this.turn_facedown_makelist(this.deck.draw_n(6), true);
-    river[6] = this.turn_facedown_makelist(this.deck.draw_n(7), true);
+    river[0] = this.turn_facedown_makelist(deck.draw_n(1), true);
+    river[1] = this.turn_facedown_makelist(deck.draw_n(2), true);
+    river[2] = this.turn_facedown_makelist(deck.draw_n(3), true);
+    river[3] = this.turn_facedown_makelist(deck.draw_n(4), true);
+    river[4] = this.turn_facedown_makelist(deck.draw_n(5), true);
+    river[5] = this.turn_facedown_makelist(deck.draw_n(6), true);
+    river[6] = this.turn_facedown_makelist(deck.draw_n(7), true);
 
     const lake=[]
     lake[0] = [];
@@ -148,14 +159,15 @@ class Game extends React.Component {
     lake[2] = [];
     lake[3] = [];
 
-    const facedown_deck = this.turn_facedown_makelist(this.deck.deck, false);
-    const deck=[facedown_deck,[]];
+    const facedown_deck = this.turn_facedown_makelist(deck.deck, false);
+    const game_deck=[facedown_deck,[]];
 
-    this.state = {
-      river: river,
-      lake: lake,
-      deck: deck,
-    }
+    return [river, lake, game_deck]
+  }
+
+  new_game_click(){
+    const [river, lake, game_deck] = this.new_game();
+    this.setState({river: river, lake: lake, deck: game_deck});
   }
 
   // In the following three functions,
@@ -438,8 +450,7 @@ class Game extends React.Component {
         </div>
 
         <div className="game-info">
-          <div>{/* status */}</div>
-          <ol>{/* TODO */}</ol>
+          <button onClick={() => this.new_game_click()}>New Game</button>
         </div>
       </div>
     );
