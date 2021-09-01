@@ -1,6 +1,8 @@
-# A Javascript/React Solitaire Game. 
+# Solitaire 
 
-https://react-solitaire24.herokuapp.com/
+**PLAY:** https://react-solitaire24.herokuapp.com/
+
+Made using Javascript/React and Create React App.
 
 Not compatible with Firefox. Tested with Chrome and Safari.
 
