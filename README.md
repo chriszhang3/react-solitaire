@@ -1,4 +1,4 @@
-# A frontend solitaire game made using react. 
+# A Javascript/React Solitaire Game. 
 
 https://react-solitaire24.herokuapp.com/
 
