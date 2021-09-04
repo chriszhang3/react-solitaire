@@ -4,7 +4,7 @@
 
 Made using Javascript/React and Create React App.
 
-Not compatible with Firefox. Tested with Chrome and Safari.
+Not compatible with Firefox or mobile devices. Tested with Chrome and Safari.
 
 ## Credits
 
