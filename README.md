@@ -1,6 +1,6 @@
 # Solitaire 
 
-**PLAY:** https://react-solitaire24.herokuapp.com/
+**PLAY:** https://react-solitaire24.herokuapp.com/  
 NOTE: The above website may take around 30 seconds to load. 
 The free Herokuapp servers will idle if no one accesses the site for 30 minutes.
 
